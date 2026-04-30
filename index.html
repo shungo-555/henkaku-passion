@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EXPRESS YOUR HENKAKU PASSION</title>
+    <meta name="description" content="Express your HENKAKU passion with this interactive DJ experience." />
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <button id="help-btn" class="help-btn">?</button>
+
+    <div id="help-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2 class="neon-text">For all HENKAKU-nist</h2>
+        <div class="help-text">
+          <p>あなたのパッションを表現してください。</p>
+          <ul>
+            <li><strong>Turntable</strong>: 動画の再生に合わせてレコードが回転します。</li>
+            <li><strong>Tempo Control</strong>: スライダーで再生速度を自由に変更できます。</li>
+            <li><strong>Hot Cues</strong>: 登録された3つのポイントに瞬時にジャンプできます。</li>
+            <li><strong>Reset</strong>: キューポイントをランダムに再配置します。</li>
+          </ul>
+          
+          <h3 style="margin-top: 2.5rem; font-size: 1.5rem; color: var(--primary-color); font-family: var(--font-main);">パッションを表現するとは？</h3>
+          <div class="passion-text">
+            <p>エンジニアやデザイナーといった枠組みを超え、誰もがプロダクトを形にできる時代。いま求められているのは、自分だけの「表現」であり、独自の「個性」です。</p>
+            <p>表現すべきことが見つからない？個性が何かわからない？<br>それでも構いません。</p>
+            <p>世の中の革新的なモノやコトは、すべて既存の要素の組み合わせから生まれています。ゼロから生み出す必要などないのです。</p>
+            <p>リミックス、リメイク、リデザイン……。異なる要素を掛け合わせるそのプロセスこそが、あなただけの「個性」を形作るのです。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-container">
+      <header>
+        <h1 class="glitch" data-text="We are HENKAKU-nists.">We are HENKAKU-nists.</h1>
+        <div class="video-wrapper">
+          <video id="player" src="./video.mp4" playsinline controls loop></video>
+        </div>
+      </header>
+
+      <main class="dj-section">
+        <div class="title-scroll-container">
+          <h2 class="section-title">Express your HENKAKU passion.</h2>
+        </div>
+        
+        <div class="turntable-container">
+          <div class="transport-controls">
+            <button id="btn-play-pause" class="transport-btn">▶</button>
+            <button id="btn-stop" class="transport-btn">⏹</button>
+          </div>
+
+          <div class="turntable">
+            <!-- The thumbnail will be set in JS from the YouTube video -->
+            <img src="" class="turntable-record" id="record" alt="HENKAKU Record" />
+            <div class="turntable-center"></div>
+          </div>
+        </div>
+        
+        <div class="dj-controls">
+          <div class="control-group slider-group">
+            <input type="range" id="tempo" min="0.25" max="2.0" step="0.05" value="1.0">
+            <span id="tempo-display" class="neon-text">1.00x</span>
+          </div>
+          
+          <div class="control-group hot-cue-group">
+            <div class="hot-cues">
+              <button class="cue-btn" data-time="32.856">Cue 1</button>
+              <button class="cue-btn" data-time="33.408">Cue 2</button>
+              <button class="cue-btn" data-time="44.867">Cue 3</button>
+              <button id="btn-cue-reset" class="cue-btn" style="background: rgba(255, 0, 234, 0.1); border-color: var(--secondary-color); color: var(--secondary-color);">RESET</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <p class="copyright">&copy; 2026 shungo555 all rights reserved.</p>
+      </footer>
+    </div>
+    
+    <script src="./main.js"></script>
+  </body>
+</html>

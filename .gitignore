@@ -1,0 +1,10 @@
+# Build and Temp files
+.DS_Store
+ebur.txt
+stats.txt
+audio.wav
+
+# Development & Analysis Tools
+cue_editor.html
+analyze.py
+beat_tracker.py
