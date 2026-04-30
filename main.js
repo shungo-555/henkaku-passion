@@ -1,3 +1,5 @@
+import recordThumbnail from './thumbnail.jpg';
+
 // Local Player Variables
 const player = document.getElementById('player');
 const START_TIME = 0; // Using extracted local video which is already from 0:32
@@ -14,7 +16,7 @@ const btnPlayPause = document.getElementById('btn-play-pause');
 const btnStop = document.getElementById('btn-stop');
 
 // Set Turntable Image to local thumbnail
-recordImage.src = `./thumbnail.jpg`;
+recordImage.src = recordThumbnail;
 
 // Handle Turntable spinning state and button text based on video events
 player.addEventListener('play', () => {
