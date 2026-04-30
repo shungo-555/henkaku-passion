@@ -132,3 +132,73 @@ if (helpBtn && helpModal && closeBtn) {
   });
 }
 
+// Recording Logic
+const btnRecord = document.getElementById('btn-record');
+let audioContext;
+let mediaRecorder;
+let recordedChunks = [];
+let isRecording = false;
+let audioSource;
+let audioDest;
+
+if (btnRecord) {
+  btnRecord.addEventListener('click', async () => {
+    if (!isRecording) {
+      await startRecording();
+    } else {
+      stopRecording();
+    }
+  });
+}
+
+async function startRecording() {
+  // Initialize AudioContext on first click
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    audioSource = audioContext.createMediaElementSource(player);
+    audioDest = audioContext.createMediaStreamDestination();
+    
+    // Connect player -> destination (for recording) AND player -> speakers (for hearing)
+    audioSource.connect(audioDest);
+    audioSource.connect(audioContext.destination);
+    
+    mediaRecorder = new MediaRecorder(audioDest.stream);
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) recordedChunks.push(e.data);
+    };
+    mediaRecorder.onstop = exportRecording;
+  }
+
+  if (audioContext.state === 'suspended') {
+    await audioContext.resume();
+  }
+
+  recordedChunks = [];
+  mediaRecorder.start();
+  isRecording = true;
+  btnRecord.classList.add('recording');
+}
+
+function stopRecording() {
+  mediaRecorder.stop();
+  isRecording = false;
+  btnRecord.classList.remove('recording');
+}
+
+function exportRecording() {
+  const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  document.body.appendChild(a);
+  a.style = 'display: none';
+  a.href = url;
+  // Use a nice filename with timestamp
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  a.download = `HENKAKU-Session-${timestamp}.webm`;
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }, 100);
+}
+
