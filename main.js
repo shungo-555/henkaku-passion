@@ -21,12 +21,12 @@ recordImage.src = recordThumbnail;
 // Handle Turntable spinning state and button text based on video events
 player.addEventListener('play', () => {
   recordImage.classList.add('playing');
-  if (btnPlayPause) btnPlayPause.innerText = '⏸';
+  if (btnPlayPause) btnPlayPause.classList.add('is-playing');
 });
 
 player.addEventListener('pause', () => {
   recordImage.classList.remove('playing');
-  if (btnPlayPause) btnPlayPause.innerText = '▶';
+  if (btnPlayPause) btnPlayPause.classList.remove('is-playing');
 });
 
 player.addEventListener('ended', () => {

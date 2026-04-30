@@ -163,15 +163,12 @@ header {
 }
 
 .transport-btn {
-  background: transparent;
+  background: rgba(0, 243, 255, 0.1);
   border: 2px solid var(--primary-color);
   color: var(--primary-color);
-  width: 60px;
-  height: 60px;
+  width: 70px; /* Slightly larger for touch */
+  height: 70px;
   border-radius: 50%;
-  font-family: var(--font-main);
-  font-size: 1.5rem;
-  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
@@ -180,9 +177,28 @@ header {
   justify-content: center;
 }
 
+.icon {
+  width: 32px;
+  height: 32px;
+  fill: currentColor;
+}
+
+.icon-pause {
+  display: none;
+}
+
+.is-playing .icon-play {
+  display: none;
+}
+
+.is-playing .icon-pause {
+  display: block;
+}
+
 .transport-btn:hover {
   background: rgba(0, 243, 255, 0.2);
-  box-shadow: 0 0 15px var(--primary-color);
+  box-shadow: 0 0 20px var(--primary-color);
+  transform: scale(1.05);
 }
 
 .transport-btn:active, .transport-btn.active {
@@ -386,16 +402,29 @@ input[type=range]::-webkit-slider-runnable-track {
 
 .modal-content {
   background: rgba(15, 15, 20, 0.95);
-  margin: 10% auto;
-  padding: 2.5rem;
+  margin: 5% auto;
+  padding: 2rem;
   border: 2px solid var(--secondary-color);
   box-shadow: 0 0 30px var(--secondary-color);
   width: 90%;
   max-width: 600px;
+  max-height: 85vh; /* Ensure it fits on screen */
+  overflow-y: auto; /* Enable scrolling */
   border-radius: 16px;
   position: relative;
   color: #fff;
   line-height: 1.8;
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary-color) transparent;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-color);
+  border-radius: 10px;
 }
 
 .close-btn {
