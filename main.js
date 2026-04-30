@@ -185,20 +185,78 @@ function stopRecording() {
   btnRecord.classList.remove('recording');
 }
 
-function exportRecording() {
+async function exportRecording() {
   const blob = new Blob(recordedChunks, { type: 'audio/webm' });
-  const url = URL.createObjectURL(blob);
+  
+  // Convert WebM to WAV for better compatibility
+  const arrayBuffer = await blob.arrayBuffer();
+  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+  const wavBlob = audioBufferToWav(audioBuffer);
+  
+  const url = URL.createObjectURL(wavBlob);
   const a = document.createElement('a');
   document.body.appendChild(a);
   a.style = 'display: none';
   a.href = url;
-  // Use a nice filename with timestamp
+  
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-  a.download = `HENKAKU-Session-${timestamp}.webm`;
+  a.download = `HENKAKU-Session-${timestamp}.wav`;
   a.click();
+  
   setTimeout(() => {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   }, 100);
+}
+
+// Helper: Convert AudioBuffer to WAV Blob
+function audioBufferToWav(buffer) {
+  const numOfChan = buffer.numberOfChannels;
+  const length = buffer.length * numOfChan * 2 + 44;
+  const buffer_wav = new ArrayBuffer(length);
+  const view = new DataView(buffer_wav);
+  const channels = [];
+  let offset = 0;
+  let pos = 0;
+
+  // Write WAV header
+  setUint32(0x46464952); // "RIFF"
+  setUint32(length - 8); // file length - 8
+  setUint32(0x45564157); // "WAVE"
+  setUint32(0x20746d66); // "fmt " chunk
+  setUint32(16);         // length = 16
+  setUint16(1);          // PCM (uncompressed)
+  setUint16(numOfChan);
+  setUint32(buffer.sampleRate);
+  setUint32(buffer.sampleRate * 2 * numOfChan); // byte rate
+  setUint16(numOfChan * 2); // block align
+  setUint16(16);         // bits per sample
+  setUint32(0x61746164); // "data" chunk
+  setUint32(length - pos - 4); // chunk length
+
+  // Write interleaved samples
+  for(let i=0; i<buffer.numberOfChannels; i++)
+    channels.push(buffer.getChannelData(i));
+
+  while(pos < length) {
+    for(let i=0; i<numOfChan; i++) {
+      let sample = Math.max(-1, Math.min(1, channels[i][offset]));
+      sample = (sample < 0 ? sample * 0x8000 : sample * 0x7FFF);
+      view.setInt16(pos, sample, true);
+      pos += 2;
+    }
+    offset++;
+  }
+
+  return new Blob([buffer_wav], { type: 'audio/wav' });
+
+  function setUint16(data) {
+    view.setUint16(pos, data, true);
+    pos += 2;
+  }
+  function setUint32(data) {
+    view.setUint32(pos, data, true);
+    pos += 4;
+  }
 }
 
